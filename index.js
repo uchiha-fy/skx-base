@@ -312,10 +312,9 @@ function skx(){
 			return res;
 		}
 	};
-	_base.public={
-		environmentType:'temperature'
-	};
 	
 	return _base;
 }
-module.exports=skx;
+
+var base=skx();
+module.exports=base;
