@@ -297,6 +297,46 @@ function skx(){
 			if(to===10)
 				return parseInt(number,from);
 			return +parseInt(number,from).toString(to);
+		},
+		/*
+			path:[[x1,y1],[x2,y2],[x3,y3]……]
+			length:Number,length>path.length
+			// 根据指定path及length,将其等分并掺插，最终返回一个长度为length的数组
+ 		*/
+		calcPath:function(path,length){
+			var total=0,data=[];
+			for(var i=0,len=path.length;i<len;i++){
+				if(i<len-1){
+					var x=path[i+1][0]-path[i][0],
+					y=path[i+1][1]-path[i][1],
+					dis=Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+					total+=dis;
+					data.push({
+						start:path[i],
+						end:path[i+1],
+						angle:180*Math.atan2(y,x)/Math.PI,
+						distance:dis
+					});
+				}
+			}
+			var step=total/(length-data.length+1);
+			var res=[];
+			data.forEach(function(item){
+				var x=item.start[0],
+				    y=item.start[1],
+				    angle=Math.PI/180*item.angle;
+				if(res.length){
+				    var last=res[res.length-1];
+				    if(last[0]==!x||last[1]!==y)
+					res.push(item.start);
+				}else
+				    res.push(item.start)
+				for(var i=0,len=Math.floor(item.distance/step);i<len;i++){
+				    res.push([x+step*Math.cos(angle)*(i+1),y+step*Math.sin(angle)*(i+1)]);
+				}
+				res.push(item.end);
+			});
+			return res;
 		}
 	};
 	_base.format={
